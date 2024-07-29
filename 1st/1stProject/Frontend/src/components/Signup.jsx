@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
+import Home from "./Home";
 
 function Signup() {
     const [name, setName] = useState("");
@@ -12,15 +13,18 @@ function Signup() {
     const handleSubmit = (e) => {
         e.preventDefault();
         axios.post("http://localhost:3001/register", { name, email, password })
-            .then(result => {
-                console.log(result);
-                if (result.data === "Success") {
-                    navigate("/login");
+            .then(response => {
+                console.log(response.data);
+                if (response.data.message === 'User registered') {
+                    navigate("/Home");
                 } else {
-                    alert("Registration failed");
+                    alert(response.data.message || "Registration failed");
                 }
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.error(err);
+                alert("An error occurred. Please try again.");
+            });
     };
 
     return (
